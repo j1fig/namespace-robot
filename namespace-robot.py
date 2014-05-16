@@ -1,9 +1,30 @@
 #!/usr/bin/env python
 
 from glob import glob
-from re import match
-from string import split
+import re
+import string
 import sys
+
+def find_and_replace_namespace(header_file_data):
+    file_data_modified = False
+    namespace_pattern = "namespace" + " " + old_namespace
+    namespace_scope_pattern = old_namespace + "::"
+    for line_index,line in enumerate(header_file_data):
+        namespace_match = re.search(namespace_pattern,line)
+        if namespace_match:
+            string.replace(header_file_data[line_index],old_namespace,new_namespace)
+            file_data_modified = True
+            continue
+        namespace_scope_match = re.search(namespace_scope_pattern,line)
+        if namespace_scope_match:
+            print " Old line: " + header_file_data[line_index]
+            string.replace(header_file_data[line_index],namespace_scope_pattern,new_namespace + "::")
+            file_data_modified = True
+            print " New line: " + header_file_data[line_index]
+
+    return file_data_modified
+
+
 
 args = sys.argv[1:]
 
@@ -16,33 +37,15 @@ else:
 
 
 for header_filename in glob("*.h"):
-    print "Processing " + header_filename
     header_file = open(header_filename,'r')
     file_data_modified = False
     header_file_data = header_file.readlines()
     
     try:
-        namespace_pattern = "namespace"
-        for line_index,line in enumerate(header_file_data):
-            namespace_match = match(namespace_pattern,line)
-            if namespace_match:
-                line_words = split(line)
-                for word_index in range(len(line_words)):
-                    if line_words[word_index] == namespace_pattern:
-                        break
-                try:
-                    if line_words[word_index+1] == old_namespace:
-                        #print " Replacing namespace " + old_namespace + " by " + new_namespace
-                        line_words[word_index+1] = new_namespace
-                        header_file_data[line_index] = " ".join(line_words) + "\n"
-                        file_data_modified = True
-                        #print " New line look: " + line
-                except IndexError:
-                    print " Found empty namespace @" + header_filename
-
+        file_data_modified = find_and_replace_namespace(header_file_data)
     finally:
         if file_data_modified:
-            #print "Writing to file ..."
+            print "Namespace changed for file " + header_filename
             header_file = open(header_filename,'w')
             header_file.writelines(header_file_data)
         header_file.close()
