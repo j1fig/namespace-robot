@@ -1,14 +1,14 @@
-namespace OSM4F
+namespace SomeTestingNamespace
 {
 
 }
 
 
-namespace OSM4F {
+namespace SomeTestingNamespace {
 
 }
 
-namespace OSM4F {
+namespace SomeTestingNamespace {
     class SomeTrashyClassInBetween {
 
     }
