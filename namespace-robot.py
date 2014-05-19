@@ -5,22 +5,36 @@ import re
 import string
 import sys
 
+def find_pattern(pattern,data_string):
+    pattern_match = re.search(pattern,data_string)
+    if pattern_match:
+        return True
+    return False
+
+
+def replace_pattern(data_string,replaced_string,replacing_string):
+    data_string = string.replace(data_string,replaced_string,replacing_string)
+    return data_string
+
 def find_and_replace_namespace(header_file_data):
     file_data_modified = False
     namespace_pattern = "namespace" + " " + old_namespace
     namespace_scope_pattern = old_namespace + "::"
+    namespace_using_pattern = old_namespace + ";"
     for line_index,line in enumerate(header_file_data):
-        namespace_match = re.search(namespace_pattern,line)
-        if namespace_match:
-            string.replace(header_file_data[line_index],old_namespace,new_namespace)
+        init_data = header_file_data[line_index]
+        if find_pattern(namespace_pattern, header_file_data[line_index]):
+            header_file_data[line_index] = replace_pattern(header_file_data[line_index], 
+                                                           old_namespace, 
+                                                           new_namespace)
+        if find_pattern(namespace_scope_pattern, header_file_data[line_index]):
+            header_file_data[line_index] = replace_pattern(header_file_data[line_index], 
+                                                           namespace_scope_pattern, 
+                                                           new_namespace + "::")
+        
+        if not (init_data is header_file_data[line_index]):
             file_data_modified = True
-            continue
-        namespace_scope_match = re.search(namespace_scope_pattern,line)
-        if namespace_scope_match:
-            print " Old line: " + header_file_data[line_index]
-            string.replace(header_file_data[line_index],namespace_scope_pattern,new_namespace + "::")
-            file_data_modified = True
-            print " New line: " + header_file_data[line_index]
+            print "Modified line to: " + header_file_data[line_index]
 
     return file_data_modified
 

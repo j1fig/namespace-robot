@@ -1,23 +1,23 @@
-namespace OtherNamespace
+namespace ANamespace
 {
 
 }
 
 
-namespace OtherNamespace {
+namespace ANamespace {
     class SomeDerivedClass: public SomeTestingNamespace 
     {
 
     };
 }
 
-namespace OtherNamespace {
+namespace ANamespace {
     class SomeTrashyClassInBetween {
 
     };
 
     template <class ParameterClass>
-    void someFreeFunction(SomeTestingNamespace::Type aNamespaceType, std::vector<SomeTestingNamespace::OtherType> aNamespaceTypeVector);
+    void someFreeFunction(ANamespace::Type aNamespaceType, std::vector<ANamespace::OtherType> aNamespaceTypeVector);
 }
 
-using namespace SomeTestingNamespace;
+using namespace ANamespace;
