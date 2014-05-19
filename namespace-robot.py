@@ -34,7 +34,6 @@ def find_and_replace_namespace(header_file_data):
         
         if not (init_data is header_file_data[line_index]):
             file_data_modified = True
-            print "Modified line to: " + header_file_data[line_index]
 
     return file_data_modified
 
